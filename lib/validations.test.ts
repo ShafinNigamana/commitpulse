@@ -1,6 +1,31 @@
 import { describe, expect, it } from 'vitest';
 import { githubParamsSchema, ogParamsSchema, streakParamsSchema } from './validations';
 
+describe('streakParamsSchema — grace fallback behavior', () => {
+  it('accepts "0" as a valid grace value', () => {
+    expect(parse({ grace: '0' }).grace).toBe(0);
+  });
+
+  it('accepts "7" as a valid grace value', () => {
+    expect(parse({ grace: '7' }).grace).toBe(7);
+  });
+
+  it('clamps "8" to 7', () => {
+    expect(parse({ grace: '8' }).grace).toBe(7);
+  });
+
+  it('clamps "-1" to 0', () => {
+    expect(parse({ grace: '-1' }).grace).toBe(0);
+  });
+
+  it('falls back to 1 for non-numeric grace value', () => {
+    expect(parse({ grace: 'abc' }).grace).toBe(1);
+  });
+
+  it('defaults to 1 when grace is omitted', () => {
+    expect(parse({}).grace).toBe(1);
+  });
+});
 describe('githubParamsSchema', () => {
   it('should pass when username is valid', () => {
     const result = githubParamsSchema.safeParse({
@@ -62,6 +87,140 @@ describe('streakParamsSchema user validation', () => {
 });
 
 describe('streakParamsSchema', () => {
+  it('accepts commits mode', () => {
+    const result = streakParamsSchema.safeParse({
+      user: 'octocat',
+      mode: 'commits',
+    });
+
+    expect(result.success).toBe(true);
+
+    if (result.success) {
+      expect(result.data.mode).toBe('commits');
+    }
+  });
+
+  it('accepts loc mode', () => {
+    const result = streakParamsSchema.safeParse({
+      user: 'octocat',
+      mode: 'loc',
+    });
+
+    expect(result.success).toBe(true);
+
+    if (result.success) {
+      expect(result.data.mode).toBe('loc');
+    }
+  });
+
+  it('falls back to commits for unknown mode', () => {
+    const result = streakParamsSchema.safeParse({
+      user: 'octocat',
+      mode: 'unknown',
+    });
+
+    expect(result.success).toBe(true);
+
+    if (result.success) {
+      expect(result.data.mode).toBe('commits');
+    }
+  });
+
+  it('defaults to commits when mode is omitted', () => {
+    const result = streakParamsSchema.safeParse({
+      user: 'octocat',
+    });
+
+    expect(result.success).toBe(true);
+
+    if (result.success) {
+      expect(result.data.mode).toBe('commits');
+    }
+  });
+
+  it('accepts a valid width value', () => {
+    const result = streakParamsSchema.safeParse({
+      user: 'octocat',
+      width: '400',
+    });
+
+    expect(result.success).toBe(true);
+
+    if (result.success) {
+      expect(result.data.width).toBe(400);
+    }
+  });
+
+  it('rejects width below minimum', () => {
+    const result = streakParamsSchema.safeParse({
+      user: 'octocat',
+      width: '99',
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects width above maximum', () => {
+    const result = streakParamsSchema.safeParse({
+      user: 'octocat',
+      width: '1201',
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it('accepts a valid height value', () => {
+    const result = streakParamsSchema.safeParse({
+      user: 'octocat',
+      height: '120',
+    });
+
+    expect(result.success).toBe(true);
+
+    if (result.success) {
+      expect(result.data.height).toBe(120);
+    }
+  });
+
+  it('rejects height below minimum', () => {
+    const result = streakParamsSchema.safeParse({
+      user: 'octocat',
+      height: '79',
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects height above maximum', () => {
+    const result = streakParamsSchema.safeParse({
+      user: 'octocat',
+      height: '801',
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects non-numeric width values', () => {
+    const result = streakParamsSchema.safeParse({
+      user: 'octocat',
+      width: 'abc',
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it('leaves width undefined when omitted', () => {
+    const result = streakParamsSchema.safeParse({
+      user: 'octocat',
+    });
+
+    expect(result.success).toBe(true);
+
+    if (result.success) {
+      expect(result.data.width).toBeUndefined();
+    }
+  });
+
   it('should fail when user is missing', () => {
     const result = streakParamsSchema.safeParse({});
 
@@ -90,6 +249,17 @@ describe('streakParamsSchema', () => {
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.data.user).toBe('octocat');
+    }
+  });
+
+  it('should reject user values longer than 39 characters', () => {
+    const result = streakParamsSchema.safeParse({
+      user: 'a'.repeat(40),
+    });
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues[0]?.message).toContain('cannot exceed 39 characters');
     }
   });
 
@@ -123,6 +293,69 @@ describe('streakParamsSchema', () => {
     expect(result.success).toBe(false);
     if (!result.success) {
       expect(result.error.issues[0]?.message).toBe('Invalid GitHub username');
+    }
+  });
+  it('should accept delta_format percent', () => {
+    const result = streakParamsSchema.safeParse({
+      user: 'octocat',
+      delta_format: 'percent',
+    });
+
+    expect(result.success).toBe(true);
+
+    if (result.success) {
+      expect(result.data.delta_format).toBe('percent');
+    }
+  });
+
+  it('should accept delta_format absolute', () => {
+    const result = streakParamsSchema.safeParse({
+      user: 'octocat',
+      delta_format: 'absolute',
+    });
+
+    expect(result.success).toBe(true);
+
+    if (result.success) {
+      expect(result.data.delta_format).toBe('absolute');
+    }
+  });
+
+  it('should accept delta_format both', () => {
+    const result = streakParamsSchema.safeParse({
+      user: 'octocat',
+      delta_format: 'both',
+    });
+
+    expect(result.success).toBe(true);
+
+    if (result.success) {
+      expect(result.data.delta_format).toBe('both');
+    }
+  });
+
+  it('should fallback to percent for invalid delta_format', () => {
+    const result = streakParamsSchema.safeParse({
+      user: 'octocat',
+      delta_format: 'unknown',
+    });
+
+    expect(result.success).toBe(true);
+
+    if (result.success) {
+      expect(result.data.delta_format).toBe('percent');
+    }
+  });
+
+  it('should default delta_format to percent when omitted', () => {
+    const result = streakParamsSchema.safeParse({
+      user: 'octocat',
+    });
+
+    expect(result.success).toBe(true);
+
+    if (result.success) {
+      expect(result.data.delta_format).toBe('percent');
     }
   });
 });
@@ -355,16 +588,15 @@ describe('streakParamsSchema — boolean transform fields', () => {
   });
 
   // ── hide_background ────────────────────────────────────────────────────────
-  // Stricter than hide_title/hide_stats — only exact 'true' is accepted,
-  // '1' does NOT enable it.
+  // Same dual-value rule as hide_title/hide_stats: 'true' and '1' are both truthy.
 
   describe('hide_background', () => {
     it('returns true when hide_background="true"', () => {
       expect(parse({ hide_background: 'true' }).hide_background).toBe(true);
     });
 
-    it('returns false when hide_background="1" (only exact "true" accepted)', () => {
-      expect(parse({ hide_background: '1' }).hide_background).toBe(false);
+    it('returns true when hide_background="1" (both "true" and "1" accepted)', () => {
+      expect(parse({ hide_background: '1' }).hide_background).toBe(true);
     });
 
     it('returns false when hide_background="false"', () => {
@@ -430,5 +662,65 @@ describe('ogParamsSchema', () => {
   it('should fall back to "unknown" when neither are provided', () => {
     const result = ogParamsSchema.parse({});
     expect(result.user).toBe('unknown');
+  });
+});
+
+describe('streakParamsSchema — view fallback behavior', () => {
+  it('accepts "default" as a valid view value', () => {
+    expect(parse({ view: 'default' }).view).toBe('default');
+  });
+
+  it('accepts "monthly" as a valid view value', () => {
+    expect(parse({ view: 'monthly' }).view).toBe('monthly');
+  });
+
+  it('falls back to "default" for unknown view value', () => {
+    expect(parse({ view: 'radar' }).view).toBe('default');
+  });
+
+  it('defaults to "default" when view is omitted', () => {
+    expect(parse({}).view).toBe('default');
+  });
+});
+
+/* ==========================================================================
+ * DATE RANGE BOUNDARY ROBUSTNESS (VARIATION 1)
+ * ========================================================================== */
+
+describe('streakParamsSchema — Date Range Boundary Robustness (Variation 1)', () => {
+  it('should process validation safely and fallback when partial or missing year parameters are passed', () => {
+    // Arrange: Provide a mock payload missing a full YYYY format sequence
+    const partialYearPayload = {
+      user: 'octocat',
+      from: '05-12',
+      to: '05-30',
+    };
+
+    // Act: Pass the object through the validator schema matrix
+    const result = streakParamsSchema.safeParse(partialYearPayload);
+
+    // Assert: The validator handles it safely using implicit date engine fallbacks
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.from).toBeDefined();
+      expect(result.data.to).toBeDefined();
+    }
+  });
+
+  it('should pass cleanly and fallback to default ranges when date bounds are completely omitted', () => {
+    // Arrange: Pass only the bare minimum required parameters
+    const minimalPayload = {
+      user: 'octocat',
+    };
+
+    // Act
+    const result = streakParamsSchema.safeParse(minimalPayload);
+
+    // Assert: Verify that omitted range options return undefined to use downstream defaults smoothly
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.from).toBeUndefined();
+      expect(result.data.to).toBeUndefined();
+    }
   });
 });
