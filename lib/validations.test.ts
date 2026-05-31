@@ -734,6 +734,15 @@ describe('ogParamsSchema', () => {
       expect(result.data.theme).toBe('dark');
     }
   });
+
+  it('falls back to dark theme when theme parameter is an empty string', () => {
+    const result = ogParamsSchema.safeParse({ theme: '' });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.theme).toBe('dark');
+    }
+  });
 });
 
 describe('streakParamsSchema — view fallback behavior', () => {
