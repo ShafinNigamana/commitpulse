@@ -543,6 +543,7 @@ describe('[Feature] custom gradient_stops and gradient_dir', () => {
         scale: 'linear',
         gradient: true,
         gradient_stops: 'ff6b35,7000ff',
+        // @ts-expect-error: intentionally passing invalid value to test fallback
         gradient_dir: 'invalid',
       } satisfies BadgeParams,
       baseCalendar
