@@ -256,15 +256,14 @@ function buildErrorResponse(error: unknown, parseResult: ParseResult): NextRespo
     message.toLowerCase().includes('validation') ||
     message.toLowerCase().includes('strictly for organizations');
 
-  const errBg = `#${sanitizeHexColor((parseResult.success && parseResult.data.bg) || '0d1117')}`;
+  const errBg = `#${sanitizeHexColor(parseResult.success ? parseResult.data.bg : undefined, '0d1117')}`;
   const errAccentRaw =
     (parseResult.success &&
       (Array.isArray(parseResult.data.accent)
         ? parseResult.data.accent[parseResult.data.accent.length - 1]
-        : parseResult.data.accent)) ||
-    '58a6ff';
-  const errAccent = `#${sanitizeHexColor(errAccentRaw)}`;
-  const errText = `#${sanitizeHexColor((parseResult.success && parseResult.data.text) || 'c9d1d9')}`;
+        : parseResult.data.accent)) || undefined;
+  const errAccent = `#${sanitizeHexColor(errAccentRaw, '58a6ff')}`;
+  const errText = `#${sanitizeHexColor(parseResult.success ? parseResult.data.text : undefined, 'c9d1d9')}`;
   const errRadius = parseResult.success
     ? (() => {
         const r = Number(parseResult.data.radius);
