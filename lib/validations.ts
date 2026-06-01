@@ -338,7 +338,7 @@ export const compareParamsSchema = z
       .regex(GITHUB_USERNAME_REGEX, { message: 'Invalid GitHub username for user2' }),
   })
   .refine((data) => data.user1.toLowerCase() !== data.user2.toLowerCase(), {
-    message: 'Cannot compare a user with themselves',
+    message: 'Cannot compare a user with themselves.',
     path: ['user2'],
   });
 
