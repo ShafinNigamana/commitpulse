@@ -19,17 +19,13 @@ export default function ShareButtons({ url, title = '' }: ShareButtonsProps) {
         href={linkedinUrl}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Share on LinkedIn (opens in a new tab)"
+        aria-label="Share on LinkedIn"
       >
-        <FaLinkedin size={24} />
+        <FaLinkedin size={24} aria-hidden="true" />
       </a>
-      <a
-        href={twitterUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Share on X / Twitter (opens in a new tab)"
-      >
-        <FaXTwitter size={24} />
+
+      <a href={twitterUrl} target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <FaXTwitter size={24} aria-hidden="true" />
       </a>
     </div>
   );
