@@ -173,7 +173,6 @@ https://commitpulse.vercel.app/api/streak?user=YOUR_USERNAME&theme=<slug>
 
 ### Gruvbox
 
-
 ![gruvbox](https://commitpulse.vercel.app/api/streak?user=jhasourav07&theme=gruvbox)
 
 | Parameter | Value  |
