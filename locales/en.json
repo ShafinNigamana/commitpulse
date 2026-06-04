@@ -56,7 +56,13 @@
       "theme_desc": "Switch between Neon, Dracula, or custom HEX modes via simple URL management.",
       "isometric_title": "Isometric Math",
       "isometric_desc": "Sophisticated 3D projection formulas turn 2D data into digital architecture."
-    }
+    },
+    "generate_badge": "Generate Badge",
+    "verified_profile": "Verified Profile",
+    "verifying": "Verifying...",
+    "preview_monolith": "PREVIEW MONOLITH",
+    "interactive_preview_title": "Interactive Monolith Preview",
+    "interactive_preview_desc": "CommitPulse compiles your public GitHub contribution history into a customizable 3D city. The taller the towers, the more you committed that day. Enter a GitHub username above to instantly generate your streak badge."
   },
   "success_guide": {
     "title": "Your Monolith is Ready - Deploy It in 4 Steps",
@@ -152,7 +158,11 @@
       "month": "Month",
       "week": "Week",
       "commits": "Commits",
-      "intensity": "Commit Intensity"
+      "intensity": "Commit Intensity",
+      "loc": "Lines of Code",
+      "loc_desc": "Lines of code modified over time",
+      "commits_desc": "Commit frequency over time",
+      "lines_modified": "{{count}} lines modified"
     },
     "languages": {
       "title": "Language Breakdown",
@@ -177,7 +187,9 @@
       "light_activity": "Light activity day",
       "no_active_streak": "No active streak",
       "active_streak": "{{streak}}-day active streak",
-      "empty": "No recent activity to display"
+      "empty": "No recent activity to display",
+      "code_activity": "Code activity recorded",
+      "no_code_changes": "No code changes recorded"
     },
     "insights": {
       "title": "AI Insights"

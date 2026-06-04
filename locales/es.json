@@ -56,7 +56,13 @@
       "theme_desc": "Cambia entre Neon, Dracula o modos HEX personalizados mediante una administraci\u00f3n de URL sencilla.",
       "isometric_title": "Matem\u00e1tica isom\u00e9trica",
       "isometric_desc": "Sofisticadas f\u00f3rmulas de proyecci\u00f3n 3D convierten datos 2D en arquitectura digital."
-    }
+    },
+    "generate_badge": "Generar insignia",
+    "verified_profile": "Perfil verificado",
+    "verifying": "Verificando...",
+    "preview_monolith": "MONOLITO DE PREVISUALIZACI\u00d3N",
+    "interactive_preview_title": "Previsualizaci\u00f3n interactiva del monolito",
+    "interactive_preview_desc": "CommitPulse compila tu historial de contribuciones p\u00fablicas de GitHub en una ciudad 3D customizable. Cuanto m\u00e1s altas son las torres, m\u00e1s commits hiciste ese d\u00e1. Ingresa un nombre de usuario de GitHub arriba para generar instant\u00e1neamente tu insignia."
   },
   "success_guide": {
     "title": "Tu monolito est\u00e1 listo - Despli\u00e9galo en 4 pasos",
@@ -152,7 +158,11 @@
       "month": "Mes",
       "week": "Semana",
       "commits": "Commits",
-      "intensity": "Intensidad de commits"
+      "intensity": "Intensidad de commits",
+      "loc": "L\u00edneas de c\u00f3digo",
+      "loc_desc": "L\u00edneas de c\u00f3digo modificadas a lo largo del tiempo",
+      "commits_desc": "Frecuencia de commits a lo largo del tiempo",
+      "lines_modified": "{{count}} l\u00edneas modificadas"
     },
     "languages": {
       "title": "Desglose de idiomas",
@@ -177,7 +187,9 @@
       "light_activity": "D\u00eda de actividad ligera",
       "no_active_streak": "Sin racha activa",
       "active_streak": "Racha activa de {{streak}} d\u00edas",
-      "empty": "Sin actividad reciente para mostrar"
+      "empty": "Sin actividad reciente para mostrar",
+      "code_activity": "Actividad de c\u00f3digo registrada",
+      "no_code_changes": "Sin cambios de c\u00f3digo registrados"
     },
     "insights": {
       "title": "Ideas de IA"
