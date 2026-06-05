@@ -28,7 +28,7 @@ export function activityToTowers(activity: ActivityData[]): TowerData[] {
   const MAX_HEIGHT_MM = 30; // tallest tower in mm
   const MIN_BUMP_MM = 1; // minimum visible bump for days with ≥1 contribution
 
-  const towers: TowerData[] = sorted.map((day, idx) => {
+  const towers = sorted.map((day, idx) => {
     const col = Math.floor(idx / 7); // week column
     const row = idx % 7; // day-of-week row
 
