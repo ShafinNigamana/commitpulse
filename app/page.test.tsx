@@ -494,44 +494,46 @@ describe('LandingPage', () => {
     });
 
     // The SVG text is never injected into the DOM, so no <script> tag can exist
-    it('shows shimmer skeleton on stat cards while user details are loading', async () => {
-      vi.spyOn(global, 'fetch').mockImplementation(() => new Promise(() => {}));
+    expect(document.querySelector('img[data-testid="badge-img"]')).not.toBeNull();
+  });
 
-      render(<LandingPage />);
-      const input = screen.getByPlaceholderText('Enter GitHub Username') as HTMLInputElement;
+  it('shows shimmer skeleton on stat cards while user details are loading', async () => {
+    vi.spyOn(global, 'fetch').mockImplementation(() => new Promise(() => {}));
 
-      await act(async () => {
-        fireEvent.change(input, { target: { value: 'octocat' } });
-      });
+    render(<LandingPage />);
+    const input = screen.getByPlaceholderText('Enter GitHub Username') as HTMLInputElement;
 
-      await waitFor(() => {
-        const skeletons = document.querySelectorAll('.shimmer');
-        expect(skeletons.length).toBeGreaterThanOrEqual(4);
-      });
-
-      vi.restoreAllMocks();
+    await act(async () => {
+      fireEvent.change(input, { target: { value: 'octocat' } });
     });
 
-    it('shows "Unable to load stats" error state on stat cards when fetch fails', async () => {
-      vi.spyOn(global, 'fetch').mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-        json: async () => ({ error: 'Internal server error' }),
-      } as Response);
-
-      render(<LandingPage />);
-      const input = screen.getByPlaceholderText('Enter GitHub Username') as HTMLInputElement;
-
-      await act(async () => {
-        fireEvent.change(input, { target: { value: 'octocat' } });
-      });
-
-      await waitFor(() => {
-        const errorMessages = screen.getAllByText('Unable to load stats');
-        expect(errorMessages.length).toBe(4);
-      });
-
-      vi.restoreAllMocks();
+    await waitFor(() => {
+      const skeletons = document.querySelectorAll('.shimmer');
+      expect(skeletons.length).toBeGreaterThanOrEqual(4);
     });
+
+    vi.restoreAllMocks();
+  });
+
+  it('shows "Unable to load stats" error state on stat cards when fetch fails', async () => {
+    vi.spyOn(global, 'fetch').mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      json: async () => ({ error: 'Internal server error' }),
+    } as Response);
+
+    render(<LandingPage />);
+    const input = screen.getByPlaceholderText('Enter GitHub Username') as HTMLInputElement;
+
+    await act(async () => {
+      fireEvent.change(input, { target: { value: 'octocat' } });
+    });
+
+    await waitFor(() => {
+      const errorMessages = screen.getAllByText('Unable to load stats');
+      expect(errorMessages.length).toBe(4);
+    });
+
+    vi.restoreAllMocks();
   });
 });
