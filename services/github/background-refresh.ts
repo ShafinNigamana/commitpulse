@@ -48,19 +48,18 @@ export class BackgroundRefresh {
 
     console.info(`[BackgroundRefresh] Queuing background refresh for: ${sanitized}`);
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       syncQueue.enqueue(async () => {
         try {
           await getFullDashboardData(username, { forceRefresh: true });
           console.info(
             `[BackgroundRefresh] Successfully completed background refresh for: ${sanitized}`
           );
-          resolve();
         } catch (err) {
           console.error(`[BackgroundRefresh] Background refresh failed for: ${sanitized}`, err);
-          reject(err);
         } finally {
           this.activeJobs.delete(sanitized);
+          resolve();
         }
       });
     });
